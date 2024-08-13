@@ -6,14 +6,36 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-@VeryImportant
 public class RunRepo {
     private List<Run> runs = new ArrayList<>();
 
     List<Run> findAll() {
         return runs;
+    }
+
+    Optional<Run> findById(int id) {
+        return runs.stream().
+                filter(run -> run.id() == id)
+                .findFirst();
+    }
+
+    void create(Run run) {
+        runs.add(run);
+    }
+
+    void update(Run run, int id) {
+        Optional<Run> existingRun = findById(id);
+
+        if (existingRun.isPresent()) {
+            runs.set(runs.indexOf(existingRun.get()), run);
+        }
+    }
+
+    void delete(int id) {
+        runs.removeIf(run -> run.id() == id);
     }
 
     @PostConstruct

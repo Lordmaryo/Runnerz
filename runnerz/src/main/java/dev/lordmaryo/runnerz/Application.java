@@ -18,17 +18,7 @@ public class Application {
         SpringApplication.run(Application.class, args);
         WelcomeMessage welcomeMessage = new WelcomeMessage();
         System.out.println(welcomeMessage.getMessage());
-
-        RunRepo runRepo = new RunRepo();
-        RunController runController = new RunController();
-
-        if (runController.getClass().isAnnotationPresent(VeryImportant.class)) {
-            System.out.println("This class is very important");
-        } else {
-            System.out.println("This class is not so very important");
-        }
     }
-
     @Bean
     CommandLineRunner runner() {
         return args -> {
