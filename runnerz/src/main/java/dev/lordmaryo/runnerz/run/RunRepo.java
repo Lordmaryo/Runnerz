@@ -25,7 +25,7 @@ public class RunRepo {
                 .list();
     }
 
-    Optional<Run> findById(int id) {
+    public Optional<Run> findById(int id) {
         return jdbcClient.sql("SELECT id, title, started_On, completed_On, miles," +
                         " location FROM Run WHERE id = :id")
                 .param("id", id)
@@ -33,28 +33,28 @@ public class RunRepo {
                 .optional();
     }
 
-    void create(Run run) {
-        var created = jdbcClient.sql("INSERT INTO Run(id, title, started_on, completed_on, " +
-                        "miles, location) VALUES(?, ?, ?, ?, ?, ?)")
+    public void create(Run run) {
+        var created = jdbcClient.sql("INSERT INTO Run(id, title, started_on," +
+                        " completed_on, miles, location) VALUES(?, ?, ?, ?, ?, ?)")
                 .params(List.of(run.id(), run.title(), run.startedOn(), run.completedOn(),
                         run.miles(), run.location().toString())).update();
 
         Assert.state(created == 1, "Failed to create run " + run.title());
     }
 
-    void update(Run run, int id) {
-        var updated = jdbcClient.sql("UPDATE Run SET title = ?, started_On = ?, completed_On = ?, " +
-                        "miles = ?, location = ? WHERE id = ?")
-                .params(List.of(run.id(), run.title(), run.startedOn(), run.completedOn(),
+    public void update(Run run, int id) {
+        var updated = jdbcClient.sql("UPDATE Run SET title = ?, started_On = ?," +
+                        " completed_On = ?, miles = ?, location = ? WHERE id = ?")
+                .params(List.of(run.title(), run.startedOn(), run.completedOn(),
                         run.miles(), run.location().toString(), id))
                 .update();
 
         Assert.state(updated == 1, "Failed to Update run " + run.title());
     }
 
-    void delete(int id) {
+    public void delete(int id) {
         var deleted = jdbcClient.sql("DELETE FROM Run WHERE id = :id")
-                .params("id", id)
+                .param("id", id)
                 .update();
 
         Assert.state(deleted == 1, "Failed to delete run " + id);
@@ -65,6 +65,10 @@ public class RunRepo {
                 .query()
                 .listOfRows()
                 .size();
+    }
+
+    public void saveAll(List<Run> runs) {
+        runs.forEach(this::create);
     }
 
     public List<Run> findByLocation(String location) {
