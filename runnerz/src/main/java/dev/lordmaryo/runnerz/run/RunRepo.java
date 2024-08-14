@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public class RunRepo {
-    private List<Run> runs = new ArrayList<>();
+    private final List<Run> runs = new ArrayList<>();
 
     List<Run> findAll() {
         return runs;
@@ -29,9 +29,7 @@ public class RunRepo {
     void update(Run run, int id) {
         Optional<Run> existingRun = findById(id);
 
-        if (existingRun.isPresent()) {
-            runs.set(runs.indexOf(existingRun.get()), run);
-        }
+        existingRun.ifPresent(value -> runs.set(runs.indexOf(value), run));
     }
 
     void delete(int id) {
@@ -42,11 +40,11 @@ public class RunRepo {
     private void init() {
         runs.add(
                 new Run(1, "Sunday morning run", LocalDateTime.now(),
-                        LocalDateTime.now().plusHours(1), 50, Location.OUTDOOR));
+                        LocalDateTime.now().plusHours(1), 20, Location.OUTDOOR));
 
         runs.add(
-                new Run(2, "Tuesday morning run", LocalDateTime.now().plusDays(2),
-                        LocalDateTime.now().plusHours(2), 50, Location.OUTDOOR)
+                new Run(2, "monday morning run", LocalDateTime.now().plusDays(2),
+                        LocalDateTime.now().plusHours(2), 30, Location.OUTDOOR)
         );
     }
 }
