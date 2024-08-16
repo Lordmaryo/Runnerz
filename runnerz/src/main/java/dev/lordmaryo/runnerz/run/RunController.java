@@ -10,9 +10,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/users/runs")
 public class RunController {
-    private final RunRepo runRepository;
+    private final RunRepository runRepository;
 
-    public RunController(RunRepo runRepository) {
+    public RunController(RunRepository runRepository) {
         this.runRepository = runRepository;
     }
 
@@ -22,7 +22,7 @@ public class RunController {
         return runRepository.findAll();
     }
     @GetMapping("/{id}")
-    public Run findByid(@PathVariable int id) {
+    public Run findById(@PathVariable int id) {
         Optional<Run> runById = runRepository.findById(id);
 
         if (runById.isEmpty()) {
@@ -36,20 +36,25 @@ public class RunController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     void create(@Valid @RequestBody Run run) {
-        runRepository.create(run);
+        runRepository.save(run);
     }
 
     // update
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
     void update(@Valid @RequestBody Run run, @PathVariable int id) {
-        runRepository.update(run, id);
+        runRepository.save(run);
     }
 
     // delete
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     void delete(@PathVariable int id) {
-        runRepository.delete(id);
+        runRepository.deleteById(id);
+    }
+
+    @GetMapping("/Location/{location}")
+    public List<Run> findByLocation(@PathVariable String location) {
+        return runRepository.findAllByLocation(location);
     }
 }
